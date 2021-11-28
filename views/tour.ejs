@@ -1,0 +1,152 @@
+<% function overviewBox(label, text, icon){ %>
+<div class="overview-box__detail">
+    <svg class="overview-box__icon">
+        <use xlink:href="/img/icons.svg#icon-<%= icon %>"></use>
+    </svg>
+    <span class="overview-box__label"><%= label %></span>
+    <span class="overview-box__text"><%= text %></span>
+</div>
+<% } %> 
+
+<% function reviewCard(review){ %>
+    <div class="reviews__card">
+        <div class="reviews__avatar">
+            <img src="/img/users/<%= review.user.photo %>" alt="<%= review.user.name %>" class="reviews__avatar-img" />
+            <h6 class="reviews__user"><%= review.user.name %></h6>
+        </div>
+        <p class="reviews__text">
+            <%= review.review %>
+        </p>
+        <div class="reviews__rating">
+            <% for(let star in [1, 2, 3, 4, 5]) { %>
+                <svg class="reviews__star reviews__star--<%= review.rating >= star ? 'active' : 'inactive' %>">
+                    <use xlink:href="/img/icons.svg#icon-star"></use>
+                </svg>
+            <% } %>
+        </div>
+    </div>
+<% } %>
+
+<section class="section-header">
+    <div class="header__hero">
+        <div class="header__hero-overlay">&nbsp;</div>
+        <img
+            class="header__hero-img"
+            src="/img/tours/<%= tour.imageCover %>"
+            alt="<%= tour.name %>"
+        />
+    </div>
+    <div class="heading-box">
+        <h1 class="heading-primary">
+            <span><%= tour.name %> Tour</span>
+        </h1>
+        <div class="heading-box__group">
+            <div class="heading-box__detail">
+                <svg class="heading-box__icon">
+                    <use xlink:href="/img/icons.svg#icon-clock"></use>
+                </svg>
+                <span class="heading-box__text"><%= tour.duration %> days</span>
+            </div>
+            <div class="heading-box__detail">
+                <svg class="heading-box__icon">
+                    <use xlink:href="/img/icons.svg#icon-map-pin"></use>
+                </svg>
+                <span class="heading-box__text"><%= tour.startLocation.description %></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-description">
+    <div class="overview-box">
+        <div>
+            <div class="overview-box__group">
+                <h2 class="heading-secondary ma-bt-lg">Quick facts</h2>
+                <% const date = new Date(tour.startDates[0]).toLocaleString('en-us', {month: 'long', year: 'numeric'}) %>
+                <% const maxGroupSize = tour.maxGroupSize + ' people' %>
+                <% const ratingsAverage = tour.ratingsAverage + ' / 5' %>
+                <% overviewBox('Next date', date, 'calendar') %> 
+                <% overviewBox('Difficulty', tour.difficulty, 'trending-up') %>
+                <% overviewBox('Participants', maxGroupSize, 'user') %>
+                <% overviewBox('Rating', ratingsAverage, 'star') %>
+            </div>
+
+            <div class="overview-box__group">
+                <h2 class="heading-secondary ma-bt-lg">Your tour guides</h2>
+
+                <% tour.guides.forEach(function(guide) { %>
+                <div class="overview-box__detail">
+                    <img
+                        src="/img/users/<%= guide.photo %>"
+                        alt="<%= guide.name %>"
+                        class="overview-box__img"
+                    />
+                    <% if(guide.role === 'guide') { %>
+                    <span class="overview-box__label">Tour guide</span>
+                    <% } else { %>
+                    <span class="overview-box__label">Intern</span>
+                    <% } %>
+                    <span class="overview-box__text"><%= guide.fullName %></span>
+                </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+
+    <div class="description-box">
+        <h2 class="heading-secondary ma-bt-lg">About <%= tour.name %> tour</h2>
+        <% const parapraphs = tour.description.split('\n') %> <%
+        parapraphs.forEach(function(parapraph) { %>
+        <p class="description__text"><%= parapraph %></p>
+        <% }) %>
+    </div>
+</section>
+
+<section class="section-pictures">
+    <% tour.images.forEach(function(img, i) { %>
+    <div class="picture-box">
+        <img
+            class="picture-box__img picture-box__img--<%= i + 1 %>"
+            src="/img/tours/<%= img %>"
+            alt="<%= tour.name %> Tour <%= i + 1 %>"
+        />
+    </div>
+    <% }) %>
+</section>
+
+<section class="section-map">
+    <div id="map" data-locations='<%= JSON.stringify(tour.locations) %>'></div>
+</section>
+
+<% if(tour.reviews.length > 0) { %>
+<section class="section-reviews">
+    <div class="reviews" id="custom-scroll">
+        <% tour.reviews.forEach(function(review) { %>
+            <% reviewCard(review) %>
+        <% }) %>
+    </div>
+</section>
+<% } %>
+
+<section class="section-cta">
+    <div class="cta">
+        <div class="cta__img cta__img--logo">
+            <img src="/img/logo-white.png" alt="Natours logo" class="" />
+        </div>
+        <img src="/img/tours/<%= tour.images[1] %>" alt="" class="cta__img cta__img--1" />
+        <img src="/img/tours/<%= tour.images[2] %>" alt="" class="cta__img cta__img--2" />
+
+        <div class="cta__content">
+            <h2 class="heading-secondary">What are you waiting for?</h2>
+            <p class="cta__text"><%= tour.duration %> days. 1 adventure. Infinite memories. Make it yours today!</p>
+            <% if(!user) { %>
+            <a href="/login" class="btn btn--green span-all-rows">Login to book tour now!</a>
+            <% } else { %>
+            <button class="btn btn--green span-all-rows" id="book-tour" data-tour-id="<%= tour._id %>">Book tour now!</button>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+
+
