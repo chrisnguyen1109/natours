@@ -9,7 +9,7 @@ export const updateUser = async (data, type = "user") => {
     try {
         const res = await axios({
             method: "PATCH",
-            url: `${url}/api/v1/auth/update-me`,
+            url: `/api/v1/auth/update-me`,
             data,
         });
         if (res.data.status === "success" && type === "user") {
@@ -30,7 +30,7 @@ export const updatePassword = async (data) => {
     try {
         const res = await axios({
             method: "PATCH",
-            url: `${url}/api/v1/auth/update-password`,
+            url: `/api/v1/auth/update-password`,
             data,
         });
         if (res.data.status === "success") {

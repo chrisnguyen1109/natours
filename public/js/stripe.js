@@ -10,7 +10,7 @@ export default async (tourId) => {
     try {
         const session = await axios({
             method: "GET",
-            url: `${url}/api/v1/bookings/checkout-session/${tourId}`,
+            url: `/api/v1/bookings/checkout-session/${tourId}`,
         });
 
         if (session.data.status === "success") {

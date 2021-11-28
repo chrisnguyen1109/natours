@@ -55,7 +55,7 @@ class AuthController {
                 httpOnly: true,
                 sameSite: "strict",
             };
-            //   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+            if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
             res.cookie("access_token", accessToken, cookieOptions);
             res.json({

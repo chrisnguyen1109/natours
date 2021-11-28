@@ -14,6 +14,7 @@ const helmet = require("helmet");
 const expressLayouts = require("express-ejs-layouts");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const compression = require("compression");
 
 // const whitelist = [];
 
@@ -59,6 +60,8 @@ app.set("views", path.join(__dirname, "./views"));
 app.use(express.static(path.join(__dirname, "./public")));
 app.use(expressLayouts);
 app.set("layout", path.join(__dirname, "./views/layout"));
+
+app.use(compression());
 
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/auth", authRouter);

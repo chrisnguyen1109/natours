@@ -44,8 +44,6 @@ const sendProdError = (err, res) => {
 
 class ErrorController {
     globalErrorHandler(err, req, res, next) {
-        console.log(err.stack);
-
         err.statusCode = err.statusCode || 500;
         err.status = err.status || "error";
 
@@ -64,6 +62,7 @@ class ErrorController {
             if (process.env.NODE_ENV === "production") {
                 return sendProdError(error, res);
             } else {
+                console.log(err.stack);
                 return sendDevError(err, res);
             }
         } else {
