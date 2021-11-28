@@ -4,10 +4,11 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon server.js",
+        "start": "node server.js",
+        "start:dev": "SET NODE_ENV=development nodemon server.js",
         "start:prod": "SET NODE_ENV=production server.js",
         "watch:js": "parcel watch --no-hmr ./public/js/index.js --out-dir ./public/js --public-url /js --out-file bundle.js",
-        "build:js": "parcel build --no-hmr ./public/js/index.js --out-dir ./public/js --public-url /js --out-file bundle.js"
+        "build:js": "parcel build ./public/js/index.js --out-dir ./public/js --public-url /js --out-file bundle.js"
     },
     "keywords": [],
     "author": "",
