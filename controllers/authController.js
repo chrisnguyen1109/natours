@@ -54,8 +54,8 @@ class AuthController {
                 ),
                 httpOnly: true,
                 sameSite: "strict",
+                secure: req.secure || req.headers["x-forwarded-proto"] === "https",
             };
-            if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
             res.cookie("access_token", accessToken, cookieOptions);
             res.json({
@@ -246,8 +246,8 @@ class AuthController {
                 ),
                 httpOnly: true,
                 sameSite: "strict",
+                secure: req.secure || req.headers["x-forwarded-proto"] === "https",
             };
-            //   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
             res.cookie("access_token", accessToken, cookieOptions);
 
