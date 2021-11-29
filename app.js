@@ -38,7 +38,6 @@ const apiLimiter = rateLimit({
 });
 
 app.enable("trust proxy");
-console.log(123);
 
 app.use(
     helmet({
