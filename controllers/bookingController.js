@@ -3,11 +3,12 @@ const customError = require("../utils/customError");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Tour = require("../models/tourModel");
 const Booking = require("../models/bookingModel");
+const User = require("../models/userModel");
 
 const createBookingCheckout = async (session) => {
     console.log(session);
-    const tour = session.client_reference_tour_id;
-    const user = session.client_reference_user_id;
+    const tour = session.client_reference_id;
+    const user = (await User.findOne({ email: session.customer_email }))._id;
     const price = 100;
     await Booking.create({ tour, user, price });
 };
@@ -22,8 +23,7 @@ class BookingController {
                 success_url: `${req.protocol}://${req.get("host")}`,
                 cancel_url: `${req.protocol}://${req.get("host")}/tour/${tour.slug}`,
                 customer_email: req.user.email,
-                client_reference_tour_id: req.params.tourId,
-                client_reference_user_id: req.user._id,
+                client_reference_id: req.params.tourId,
                 mode: "payment",
                 line_items: [
                     {
