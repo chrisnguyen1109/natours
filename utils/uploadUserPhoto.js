@@ -34,10 +34,10 @@ exports.uploadTourImages = upload.fields([
 
 exports.resizeFile = catchAsync(async (req, res, next) => {
     if (req.file) {
-        if (!req.user.photo.startsWith("default")) {
-            const deleteOldPhoto = promisify(fs.unlink);
-            await deleteOldPhoto(path.join(__dirname, `../public/img/users/${req.user.photo}`));
-        }
+        // if (!req.user.photo.startsWith("default")) {
+        //     const deleteOldPhoto = promisify(fs.unlink);
+        //     await deleteOldPhoto(path.join(__dirname, `../public/img/users/${req.user.photo}`));
+        // }
 
         req.file.filename = `user-${req.user._id}-${Date.now()}.jpeg`;
 
