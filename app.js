@@ -37,6 +37,8 @@ const apiLimiter = rateLimit({
     message: "Too many accounts created from this IP, please try again after an hour",
 });
 
+app.enable("trust proxy");
+
 app.use(
     helmet({
         contentSecurityPolicy: false,
