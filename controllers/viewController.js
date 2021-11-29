@@ -48,6 +48,10 @@ class viewController {
             title: "Account",
         });
     }
+
+    getSuccessPayment(req, res, next) {
+        res.render("successPayment", { layout: false });
+    }
 }
 
 module.exports = new viewController();

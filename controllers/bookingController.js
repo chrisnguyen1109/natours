@@ -9,7 +9,7 @@ const createBookingCheckout = async (session) => {
     console.log(session);
     const tour = session.client_reference_id;
     const user = (await User.findOne({ email: session.customer_email }))._id;
-    const price = 100;
+    const price = session.amount_total / 100;
     await Booking.create({ tour, user, price });
 };
 
@@ -20,7 +20,7 @@ class BookingController {
 
             const session = await stripe.checkout.sessions.create({
                 payment_method_types: ["card"],
-                success_url: `${req.protocol}://${req.get("host")}`,
+                success_url: `${req.protocol}://${req.get("host")}/payment-success`,
                 cancel_url: `${req.protocol}://${req.get("host")}/tour/${tour.slug}`,
                 customer_email: req.user.email,
                 client_reference_id: req.params.tourId,

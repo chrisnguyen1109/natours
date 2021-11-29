@@ -1,12 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const viewController = require("../controllers/viewController");
-const { getOverviewPage, getDetailPage, getLoginPage, getMe } = viewController;
+const { getOverviewPage, getDetailPage, getLoginPage, getMe, getSuccessPayment } = viewController;
 const { isLoggedIn } = require("../controllers/authController");
 const { checkAuth } = require("../controllers/authController");
 const { checkRole } = require("../middlewares/authMiddleware");
 
 router.route("/me").get(checkAuth(), getMe);
+
+router.get("/payment-success", getSuccessPayment);
 
 router.use(isLoggedIn());
 
