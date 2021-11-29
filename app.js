@@ -15,6 +15,7 @@ const expressLayouts = require("express-ejs-layouts");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const compression = require("compression");
+const { getWebhookCheckout } = require("./controllers/bookingController");
 
 // const whitelist = [];
 
@@ -46,6 +47,8 @@ app.use(
 );
 
 app.use("/api/", apiLimiter);
+
+app.post("/webhook-checkout", express.raw({ type: "application/json" }), getWebhookCheckout);
 
 app.use(express.json());
 app.use(

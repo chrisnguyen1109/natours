@@ -4,6 +4,14 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Tour = require("../models/tourModel");
 const Booking = require("../models/bookingModel");
 
+const createBookingCheckout = async (session) => {
+    console.log(session);
+    const tour = session.client_reference_tour_id;
+    const user = session.client_reference_user_id;
+    const price = 100;
+    await Booking.create({ tour, user, price });
+};
+
 class BookingController {
     getCheckoutSession() {
         return catchAsync(async (req, res) => {
@@ -14,12 +22,16 @@ class BookingController {
                 success_url: `${req.protocol}://${req.get("host")}`,
                 cancel_url: `${req.protocol}://${req.get("host")}/tour/${tour.slug}`,
                 customer_email: req.user.email,
-                client_reference_id: req.params.tourId,
+                client_reference_tour_id: req.params.tourId,
+                client_reference_user_id: req.user._id,
+                mode: "payment",
                 line_items: [
                     {
                         name: `${tour.name} Tour`,
                         description: tour.summary,
-                        images: [`https://www.natours.dev/img/tours/tour-2-cover.jpg`],
+                        images: [
+                            `${req.protocol}://${req.get("host")}/img/tours/${tour.imageCover}.jpg`,
+                        ],
                         amount: tour.price * 100,
                         currency: "usd",
                         quantity: 1,
@@ -32,6 +44,29 @@ class BookingController {
                 session,
             });
         });
+    }
+
+    getWebhookCheckout(req, res) {
+        try {
+            const sig = request.headers["stripe-signature"];
+            const event = stripe.webhooks.constructEvent(
+                request.body,
+                sig,
+                proccess.env.STRIPE_ENDPOINT_SECRET
+            );
+
+            if (event.type === "checkout.session.completed") {
+                await createBookingCheckout(event.data.object);
+
+                return res.json({
+                    status: "success",
+                });
+            }
+
+            throw new customError("Payment Error!", 400);
+        } catch (err) {
+            return res.status(400).send(`Webhook Error: ${err.message}`);
+        }
     }
 
     getMyBookingTours() {
