@@ -56,7 +56,7 @@ class BookingController {
             );
 
             if (event.type === "checkout.session.completed") {
-                await createBookingCheckout(event.data.object);
+                createBookingCheckout(event.data.object);
 
                 return res.json({
                     status: "success",
