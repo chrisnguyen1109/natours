@@ -30,7 +30,7 @@ class BookingController {
                         name: `${tour.name} Tour`,
                         description: tour.summary,
                         images: [
-                            `${req.protocol}://${req.get("host")}/img/tours/${tour.imageCover}.jpg`,
+                            `${req.protocol}://${req.get("host")}/img/tours/${tour.imageCover}`,
                         ],
                         amount: tour.price * 100,
                         currency: "usd",
@@ -48,9 +48,9 @@ class BookingController {
 
     getWebhookCheckout(req, res) {
         try {
-            const sig = request.headers["stripe-signature"];
+            const sig = req.headers["stripe-signature"];
             const event = stripe.webhooks.constructEvent(
-                request.body,
+                req.body,
                 sig,
                 proccess.env.STRIPE_ENDPOINT_SECRET
             );
