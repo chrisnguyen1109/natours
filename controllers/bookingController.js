@@ -52,7 +52,7 @@ class BookingController {
             const event = stripe.webhooks.constructEvent(
                 req.body,
                 sig,
-                proccess.env.STRIPE_ENDPOINT_SECRET
+                process.env.STRIPE_ENDPOINT_SECRET
             );
 
             if (event.type === "checkout.session.completed") {
