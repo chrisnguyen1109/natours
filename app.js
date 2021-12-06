@@ -17,6 +17,7 @@ const cors = require("cors");
 const compression = require("compression");
 const { getWebhookCheckout } = require("./controllers/bookingController");
 
+// test cors
 // const whitelist = [];
 
 // const corsOptions = {

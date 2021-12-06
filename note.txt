@@ -1,0 +1,10 @@
+- helmet(contentSecurityPolicy)
+- express-rate-limit
+- compression
+- app.enable("trust proxy");
+- mongoose la gi?
+- application logic and business logic
+- @babel/polyfill
+- express-mongo-sanitize
+- multer
+- sharp
