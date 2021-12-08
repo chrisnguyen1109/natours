@@ -41,11 +41,7 @@ class AuthController {
             if (!email || !password)
                 throw new customError("Please provide email and password", 400);
 
-            const user = await User.findOne({ email }).select("+password");
-            if (!user) throw new customError("Invalid email", 401);
-
-            const comparePassword = await user.comparePassword(password, user.password);
-            if (!comparePassword) throw new customError("Wrong password", 401);
+            const user = await User.findByCredentials(email, password);
 
             const accessToken = await genTokenAsync({ id: user._id }, "login");
             const cookieOptions = {
@@ -231,9 +227,7 @@ class AuthController {
             if (!currentPassword || !password || !confirmPassword)
                 throw new customError("Please provide all neccessary information", 400);
 
-            const user = await User.findById(req.user._id).select("+password");
-            const comparePassword = await user.comparePassword(currentPassword, user.password);
-            if (!comparePassword) throw new customError("Your current password is wrong", 401);
+            const user = await User.findByCredentials(req.user.email, currentPassword);
 
             user.password = password;
             user.confirmPassword = confirmPassword;

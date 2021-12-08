@@ -3,6 +3,7 @@ const validator = require("validator");
 const { Schema } = mongoose;
 const bcrypt = require("bcryptjs");
 const genTokenAsync = require("../utils/generateToken");
+const customError = require("../utils/customError");
 
 const trimmedString = { type: String, trim: true };
 
@@ -104,6 +105,16 @@ userSchema.pre("save", async function (next) {
 userSchema.virtual("fullName").get(function () {
     return `${this.firstName} ${this.lastName}`.trim();
 });
+
+userSchema.statics.findByCredentials = async function (email, password) {
+    const user = await this.findOne({ email }).select("+password");
+    if (!user) throw new customError("Invalid email", 401);
+
+    const comparePassword = await user.comparePassword(password, user.password);
+    if (!comparePassword) throw new customError("Wrong password", 401);
+
+    return user;
+};
 
 userSchema.methods.comparePassword = async (password, userPassword) => {
     return await bcrypt.compare(password, userPassword);
