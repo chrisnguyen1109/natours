@@ -53,6 +53,9 @@ const userSchema = new Schema(
             type: String,
             default: "default.jpg",
         },
+        avatar: {
+            type: Buffer,
+        },
         passwordModified: {
             type: Date,
         },

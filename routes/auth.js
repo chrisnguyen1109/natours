@@ -14,6 +14,7 @@ const {
     getMe,
     logOut,
     activateAccount,
+    getMyAvatar,
 } = authController;
 const mongoSanitize = require("express-mongo-sanitize")();
 
@@ -32,5 +33,6 @@ router.patch("/update-password", updatePassword());
 router.patch("/update-me", uploadPhotoFile, resizeFile, updateMe());
 router.delete("/delete-me", deleteMe());
 router.get("/me", getMe());
+router.get("/avatar", getMyAvatar());
 
 module.exports = router;

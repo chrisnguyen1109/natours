@@ -113,6 +113,7 @@ class AuthController {
             if (user.checkPasswordModified(iat))
                 throw new customError("User recently changed password! Please log in again", 401);
 
+            user.avatarBase64 = user.avatar?.toString("base64");
             req.user = user;
             res.locals.user = user;
 
@@ -138,6 +139,7 @@ class AuthController {
 
                 if (user.checkPasswordModified(iat)) return next();
 
+                user.avatarBase64 = user.avatar?.toString("base64");
                 res.locals.user = user;
             }
             next();
@@ -220,6 +222,18 @@ class AuthController {
         });
     }
 
+    getMyAvatar() {
+        return catchAsync(async (req, res) => {
+            const user = await User.findById(req.user._id);
+
+            if (!user.avatar) {
+                throw new customError("This user has no avatar!", 404);
+            }
+
+            res.set("Content-Type", "image/jpge").send(user.avatar);
+        });
+    }
+
     updatePassword() {
         return catchAsync(async (req, res) => {
             const { currentPassword, password, confirmPassword } = req.body;
@@ -261,7 +275,10 @@ class AuthController {
             validFields.forEach((el) => {
                 validObj[el] = req.body[el];
             });
-            req.file && (validObj.photo = req.file.filename);
+            if (req.file) {
+                validObj.photo = req.file.filename;
+                validObj.avatar = req.file.bufferSharp;
+            }
             const user = await User.findByIdAndUpdate(req.user._id, validObj, {
                 new: true,
                 runValidators: true,
