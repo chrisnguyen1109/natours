@@ -45,11 +45,12 @@
                                     required="required" disabled />
                             </div>
                             <div class="form__group form__photo-upload">
-                                <% if(user.photo) { %>
-                                    <img class="form__user-photo" src="/img/users/<%= user.photo %>" alt="User photo" />
+                                <% if(user.avatarBase64) { %>
+                                    <img class="form__user-photo" src="data:image/jpge;base64,<%= user.avatarBase64 %>"
+                                        alt="User photo" />
                                     <% } else { %>
-                                        <img class="form__user-photo"
-                                            src="data:image/jpge;base64,<%= user.avatarBase64 %>" alt="User photo" />
+                                        <img class="form__user-photo" src="/img/users/<%= user.photo %>"
+                                            alt="User photo" />
                                         <% } %>
                                             <input class="form__upload" type="file" accept="image/*" id="photo"
                                                 name="photo" />
